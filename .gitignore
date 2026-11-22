@@ -22,3 +22,19 @@ Backend/*.pyc
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+
+# React
+node_modules/
+dist/
+
+# VS Code
+.vscode/
+
+# Python environment
+.venv/
