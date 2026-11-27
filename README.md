@@ -1,118 +1,73 @@
 # SignVox – Sign Language to Voice Translator
 
-SignVox is an AI-based web application designed to help people communicate through sign language.
+SignVox is a real-time **Indian Sign Language (ISL) to Text and Voice Translator** built with React, FastAPI, MediaPipe, and Scikit-learn. It tracks 21 hand landmarks from a live webcam feed at 60 FPS, classifies gestures using a trained Random Forest model, displays the recognized sign with live confidence scoring, and converts it into speech output.
 
-The project aims to recognize hand gestures using computer vision and convert recognized signs into text and speech.
+---
 
 ## Features
 
-- Live camera interface
-- Sign language translation interface
-- React frontend
-- FastAPI backend
-- Planned hand landmark detection using MediaPipe
-- Planned machine learning-based sign recognition
-- Planned text-to-speech output
+- **Real-Time 60 FPS Hand Tracking:** Browser-side 21-point hand landmark detection and skeleton overlay using MediaPipe Tasks Vision (`@mediapipe/tasks-vision`).
+- **ISL Gesture Classification (`HELLO`):** Wrist-relative coordinate normalization (63 features) classified via a Scikit-learn Random Forest model (`92.7%` test accuracy, `75%` confidence threshold, multi-frame smoothing).
+- **Live Translation & Confidence UI:** Displays the recognized sign and real-time confidence percentage across dedicated overlay and output panels.
+- **Voice Output:** Button-triggered Text-to-Speech synthesis using the browser's Web Speech API (`SpeechSynthesis`).
+- **Full-Stack Architecture:** React + Tailwind CSS frontend communicating with a Python FastAPI REST backend (`/test` and `/predict`).
+
+---
 
 ## Technologies Used
 
 ### Frontend
-- HTML
-- CSS
-- JavaScript
-- React.js
+- React.js (Vite)
 - Tailwind CSS
+- MediaPipe Tasks Vision (`@mediapipe/tasks-vision`)
+- Web Speech API (`window.speechSynthesis`)
 
-### Backend
-- Python
-- FastAPI
-- REST API
+### Backend & Machine Learning
+- Python 3.12
+- FastAPI & Uvicorn
+- Scikit-learn (Random Forest Classifier) & Joblib
+- MediaPipe, OpenCV, NumPy & Pandas
 
-### AI / Machine Learning
-- MediaPipe (planned)
-- Scikit-learn (planned)
+---
 
 ## Project Structure
 
 ```text
 Signvox/
 ├── Backend/
-│   ├── main.py
-│   └── requirements.txt
+│   ├── dataset/
+│   │   ├── signvox_dataset.csv
+│   │   ├── amrita_slr_landmarks.csv
+│   │   └── amrita_slr_extraction_report.csv
+│   ├── models/
+│   │   └── hello_detector.pkl
+│   ├── collect_data.py          # Webcam tool to record 30-frame normalized gesture samples
+│   ├── extract_landmarks.py     # Batch landmark extractor for external sign videos
+│   ├── hand_detection.py        # Standalone MediaPipe hand-tracking test script
+│   ├── hand_landmarker.task     # MediaPipe HandLandmarker model asset
+│   ├── main.py                  # FastAPI server (/test, /predict)
+│   ├── requirements.txt         # Python dependencies
+│   ├── test_webcam.py           # Standalone OpenCV webcam inference test
+│   └── train_model.py           # Random Forest training & evaluation script
 │
 ├── Frontend/
 │   ├── public/
+│   │   └── hand_landmarker.task # Local MediaPipe asset for smooth browser tracking
 │   ├── src/
 │   │   ├── assets/
 │   │   ├── component/
+│   │   │   ├── Camera.jsx
+│   │   │   ├── DetectionOverlay.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── ModeSelector.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── TextToSign.jsx
+│   │   │   └── TranslationOutput.jsx
 │   │   ├── services/
+│   │   │   └── api.js
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   └── package.json
 │
 ├── .gitignore
 └── README.md
-```
-
-## Installation and Setup
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Ayushmeena734/Signvox.git
-cd Signvox
-```
-
-### 2. Start the Backend
-
-```bash
-cd Backend
-python -m venv venv
-```
-
-Activate virtual environment on Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Start FastAPI:
-
-```bash
-uvicorn main:app --reload
-```
-
-Backend URL: http://127.0.0.1:8000
-
-### 3. Start the Frontend
-
-Open another terminal:
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
-Frontend URL: http://localhost:5173
-
-## Project Status
-
-React frontend and FastAPI backend are connected successfully.
-
-MediaPipe integration, dataset collection, machine learning and voice recognition are planned development stages.
-
-## Developers
-
-- Ayush Meena
-- Atharv Deshmukh
-
----
-
-**SignVox – Breaking Communication Barriers Through Technology.**
