@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { testBackend } from "./services/api";
 import Navbar from "./component/Navbar";
@@ -16,7 +16,12 @@ function App() {
 
   const [backendStatus, setBackendStatus] = useState("Connecting...");
 
-  //backend connection
+  const handlePrediction = useCallback((sign, conf) => {
+    setDetectedSign(sign);
+    setConfidence(conf);
+  }, []);
+
+  // Backend connection check
   useEffect(() => {
     testBackend()
       .then((data) => {
@@ -33,7 +38,7 @@ function App() {
     <div className="min-h-screen bg-slate-950 text-white">
       <Navbar />
 
-      <p className="text-green-400 text-center">Backend: {backendStatus}</p>
+      <p className="text-center text-green-400">Backend: {backendStatus}</p>
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <ModeSelector mode={mode} setMode={setMode} />
@@ -42,7 +47,7 @@ function App() {
           <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-5">
             {/* Camera + Detected Sign */}
             <div className="flex flex-col gap-5 lg:col-span-3">
-              <Camera />
+              <Camera onPrediction={handlePrediction} />
 
               <DetectionOverlay
                 detectedSign={detectedSign}

@@ -38,3 +38,5 @@ dist/
 
 # Python environment
 .venv/
+# Large raw video datasets
+Backend/external_dataset/
